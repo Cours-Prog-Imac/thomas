@@ -135,6 +135,56 @@ void exo10(sil::Image& image) {
 
 void exo11(sil::Image& image) {
 
+    int x_m = image.width()/2;
+    int y_m = image.height()/2;
+
+    float rayon = 100;
+
+    for (int x{0}; x < image.width(); x++) {
+        for (int y{0}; y < image.height(); y++) {
+            // Calcul distance entre centre et le point
+
+            float distance = sqrt(pow(x - x_m, 2) + pow(y - y_m, 2));
+            if (distance < rayon) {
+                image.pixel(x, y).r = 1;
+                image.pixel(x, y).b = 1;
+                image.pixel(x, y).g = 1;
+            } else {
+                image.pixel(x, y).r = 0;
+                image.pixel(x, y).b = 0;
+                image.pixel(x, y).g = 0;
+            }
+
+        }
+    }
+}
+
+void exo12(sil::Image &image) {
+    int x_m = image.width()/2;
+    int y_m = image.height()/2;
+
+    float rayon = 100;
+
+    // Pareil que exo11 mais pour un cercle cette fois ci
+    for (int x{0}; x < image.width(); x++) {
+        for (int y{0}; y < image.height(); y++) {
+
+            // Calcul distance entre centre et le point
+            float distance = sqrt(pow(x - x_m, 2) + pow(y - y_m, 2));
+
+            // Si la distance est égale au rayon, on est sur le cercle
+            if (distance >= rayon - 1 && distance <= rayon + 1) {
+                image.pixel(x, y).r = 1;
+                image.pixel(x, y).b = 1;
+                image.pixel(x, y).g = 1;
+            } else {
+                image.pixel(x, y).r = 0;
+                image.pixel(x, y).b = 0;
+                image.pixel(x, y).g = 0;
+            }
+
+        }
+    }
 }
 
 
@@ -145,7 +195,7 @@ int main()
 
     sil::Image image{500/*width*/, 500/*height*/};
 
-    exo11(image);
+    exo12(image);
 
-    image.save("output/exo11.png");
+    image.save("output/exo12.png");
 }
