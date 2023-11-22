@@ -266,15 +266,62 @@ void contraste(sil::Image &image) {
     }
 }
 
+void convolution(sil::Image &image) {
+
+    // Kernel
+    int kernel_size = 30;
+    int semi_kernel = (kernel_size-1)/2;
+
+    sil::Image copie = image;
+
+
+    for (int x{0}; x < image.width(); x++) {
+
+        for (int y{0}; y < image.height(); y++) {
+
+            // Pour chaque pixel je refait un parcours des points autour
+            float red_total = 0;
+            float green_total = 0;
+            float blue_total = 0;
+
+            int px_count = 0;
+
+            for (int i = x - semi_kernel; i < x + semi_kernel + 1; i++) {
+                for (int j = y - semi_kernel; j < y + semi_kernel + 1; j++) {
+
+
+                    // Check if the px is in the image
+                    if (i >= 0 && i < image.width() && j >= 0 && j < image.height()) {
+                        red_total += copie.pixel(i, j).r;
+                        green_total += copie.pixel(i, j).g;
+                        blue_total += copie.pixel(i, j).b;
+                        px_count++;
+                    }
+
+
+                }
+            }
+
+            float red_avg = red_total / static_cast<float>(px_count);
+            float green_avg = green_total / static_cast<float>(px_count);
+            float blue_avg = blue_total / static_cast<float>(px_count);
+
+            image.pixel(x,y).r = red_avg;
+            image.pixel(x,y).g = green_avg;
+            image.pixel(x,y).b = blue_avg;
+        }
+    }
+}
+
 
 int main()
 {
     //sil::Image image{300/*width*/, 200/*height*/};
     //sil::Image image{"images/photo.jpg"}; // 300x345
 
-    sil::Image image{"images/photo_faible_contraste.jpg"}; // 300x345
+    sil::Image image{"images/logo.png"}; // 300x345
 
-    contraste(image);
+    convolution(image);
 
-    image.save("output/contraste.png");
+    image.save("output/convolution.png");
 }
