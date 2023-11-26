@@ -297,8 +297,6 @@ void convolution(sil::Image &image) {
                         blue_total += copie.pixel(i, j).b;
                         px_count++;
                     }
-
-
                 }
             }
 

@@ -3,7 +3,6 @@ build
 .vscode
 _deps
 CMakeFiles
-output
 ImageEditor
 CMakeCache.txt
 Makefile
