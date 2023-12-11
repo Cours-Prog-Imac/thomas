@@ -34,7 +34,7 @@ void negatif(sil::Image &image) {
     for (glm::vec3& color : image.pixels()) {
         color.r = 1 - color.r;
         color.b = 1 - color.b;
-        color.g = 1 - color.b;
+        color.g = 1 - color.g; // Oups.
     }
 }
 
@@ -42,7 +42,7 @@ void degrade(sil::Image &image) {
     for (int x{0}; x < image.width(); x++) {
 
         // Calcul de la couleur
-        float intensity = x/(float)image.width();
+        float intensity = x/static_cast<float>(image.width()); // On préférera faire un static_cast pour les conversions entre type. Cf https://youtu.be/DAvZ3OG9cNo
 
         for (int y{0}; y < image.height(); y++)
         {
@@ -280,9 +280,8 @@ void convolution(sil::Image &image) {
         for (int y{0}; y < image.height(); y++) {
 
             // Pour chaque pixel je refait un parcours des points autour
-            float red_total = 0;
-            float green_total = 0;
-            float blue_total = 0;
+            // Tu aurais pu faire un vec3 pour stocker les trois totaux d'un coup, ça allège le code
+            glm::vec3 total{0.f};
 
             int px_count = 0;
 
@@ -292,21 +291,15 @@ void convolution(sil::Image &image) {
 
                     // Check if the px is in the image
                     if (i >= 0 && i < image.width() && j >= 0 && j < image.height()) {
-                        red_total += copie.pixel(i, j).r;
-                        green_total += copie.pixel(i, j).g;
-                        blue_total += copie.pixel(i, j).b;
+                        total += copie.pixel(i, j);
                         px_count++;
                     }
                 }
             }
 
-            float red_avg = red_total / static_cast<float>(px_count);
-            float green_avg = green_total / static_cast<float>(px_count);
-            float blue_avg = blue_total / static_cast<float>(px_count);
+            glm::vec3 avg = total / static_cast<float>(px_count);
 
-            image.pixel(x,y).r = red_avg;
-            image.pixel(x,y).g = green_avg;
-            image.pixel(x,y).b = blue_avg;
+            image.pixel(x,y) = avg;
         }
     }
 }
